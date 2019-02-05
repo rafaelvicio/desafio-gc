@@ -67,6 +67,14 @@ console.log("########################")
 
 console.log("Grupos: ", grupos)
 
+grupos.map(grupo => {
+    _.orderBy(grupo, ['pontos'], ['asc'])
+})
+
+
+
+console.log("Grupor ordenado: ", grupos)
+
 console.log("########################")
 console.log("Vamos dar inicio as playofs")
 console.log("########################")
