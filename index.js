@@ -75,6 +75,30 @@ console.log("########################")
 console.log("Vamos dar inicio as playofs")
 console.log("########################")
 
+const gruposComVencedores = gruposOrdenados.map(grupo => {
+    return _.slice(grupo, 0, 2)
+})
+
+console.log("Grupo so com vencedores: ", gruposComVencedores)
+
+const timesPlayOffs = [];
+
+gruposComVencedores.map(grupo => {
+    grupo.map(time => {
+        timesPlayOffs.push(time)
+    })
+}) 
+
+console.log("########################")
+console.log("Times dos Playoofs")
+console.log("########################")
+
+console.log(timesPlayOffs)
+
+const timesEmbaralhados = _.shuffle(timesPlayOffs)
+
+console.log("Times embaralhados: ", timesEmbaralhados)
+
 function jogarPartida(team01, team02) {
 
     let team01_rounds = _.random(0, 16);
