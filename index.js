@@ -1,18 +1,18 @@
 const _ = require("lodash")
 
 const times = [
-    {id: '1', name: 'team1', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '2', name: 'team2', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '3', name: 'team3', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '4', name: 'team4', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '5', name: 'team5', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '6', name: 'team6', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '7', name: 'team7', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '8', name: 'team8', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '9', name: 'team9', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '10', name: 'team10', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '11', name: 'team11', pontos: 0, vitorias: 0, derrotas: 0},
-    {id: '12', name: 'team12', pontos: 0, vitorias: 0, derrotas: 0},
+    {id: '1', name: 'team1', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '2', name: 'team2', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '3', name: 'team3', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '4', name: 'team4', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '5', name: 'team5', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '6', name: 'team6', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '7', name: 'team7', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '8', name: 'team8', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '9', name: 'team9', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '10', name: 'team10', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '11', name: 'team11', pontos: 0, rounds: 0, derrotas: 0},
+    {id: '12', name: 'team12', pontos: 0, rounds: 0, derrotas: 0},
 ]
 
 console.log("########################")
@@ -21,7 +21,7 @@ console.log("########################")
 
 const novoArray = _.shuffle(times)
 
-const grupos = _.chunk(novoArray, 4)
+let grupos = _.chunk(novoArray, 4)
 
 console.log("########################")
 console.log("Grupos sorteados!")
@@ -45,12 +45,12 @@ grupos.map(grupo => {
                 if(resultadoPartida.team01_rounds > resultadoPartida.team02_rounds) {
                     console.log("O time venceu, o adversario perdeu!")
                     time.pontos++
-                    time.vitorias++
+                    time.rounds += resultadoPartida.team01_rounds
                     adversario.derrotas++
                 }else {
                     console.log("O adversaio venceu!")
                     adversario.pontos++
-                    adversario.vitorias++
+                    adversario.rounds += resultadoPartida.team02_rounds
                     time.derrotas++
                 }  
             }
@@ -65,22 +65,15 @@ console.log("########################")
 console.log("Tabela final de grupos")
 console.log("########################")
 
-console.log("Grupos: ", grupos)
-
-grupos.map(grupo => {
-    _.orderBy(grupo, ['pontos'], ['asc'])
+const gruposOrdenados = grupos.map(grupo => {
+    return _.orderBy(grupo, ['pontos', 'rounds'], ['desc', 'desc'])
 })
 
-
-
-console.log("Grupor ordenado: ", grupos)
+console.log("Grupor ordenado: ", gruposOrdenados)
 
 console.log("########################")
 console.log("Vamos dar inicio as playofs")
 console.log("########################")
-
-
-
 
 function jogarPartida(team01, team02) {
 
