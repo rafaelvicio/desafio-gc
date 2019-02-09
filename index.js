@@ -1,8 +1,5 @@
 const _ = require("lodash")
 
-//TODO Forma mais real de reazar o resultado da partida
-//TODO Implementar TBD para grupos impares
-
 const times = [
     {id: '1', name: 'team1', pontos: 0, rounds: 0, derrotas: 0},
     {id: '2', name: 'team2', pontos: 0, rounds: 0, derrotas: 0},
@@ -14,25 +11,23 @@ const times = [
     {id: '8', name: 'team8', pontos: 0, rounds: 0, derrotas: 0}
 ]
 
-console.log("########################")
-console.log("Iniciando campeonato!")
-console.log("########################")
+console.log("################################################################################################")
+console.log("Iniciando campeonato da Gamers Club - O clube para quem joga sério")
+console.log("################################################################################################")
 
-const novoArray = _.shuffle(times)
+let grupos = _.shuffle(times)
 
-let grupos = _.chunk(novoArray, 4)
+grupos = _.chunk(grupos, 4)
 
-console.log("########################")
-console.log("Grupos sorteados!")
-console.log("########################")
+console.log("################################################################################################")
+console.log("Realizando sorteio dos grupos:", grupos)
+console.log("################################################################################################")
 
-console.log("Os grupos: ", grupos)
+console.log("################################################################################################")
+console.log("Iniciando as partidas da fase de grupos")
+console.log("################################################################################################")
 
 const partidas = [];
-
-console.log("########################")
-console.log("Iniciando as partidas!")
-console.log("########################")
 
 grupos.map(grupo => {
     grupo.map(time => {
@@ -40,7 +35,7 @@ grupos.map(grupo => {
             if(!_.isEqual(time, adversario) && jogouContra(time, adversario)) {
                 resultadoPartida = jogarPartida(time, adversario)
                 partidas.push(resultadoPartida)
-                console.log("A partida: ", resultadoPartida)
+                console.log("Resultado partida -----> ", resultadoPartida)
                 if(resultadoPartida.team01_rounds > resultadoPartida.team02_rounds) {
                     time.pontos++
                     time.rounds += resultadoPartida.team01_rounds
@@ -56,27 +51,17 @@ grupos.map(grupo => {
     })
 })
 
-console.log("As partidas: ", partidas)
-
-console.log("########################")
-console.log("Tabela final de grupos")
-console.log("########################")
-
 const gruposOrdenados = grupos.map(grupo => {
     return _.orderBy(grupo, ['pontos', 'rounds'], ['desc', 'desc'])
 })
 
-console.log("Grupor ordenado: ", gruposOrdenados)
-
-console.log("########################")
-console.log("Vamos dar inicio as playofs")
-console.log("########################")
+console.log("################################################################################################")
+console.log("Tabela final de grupos", gruposOrdenados)
+console.log("################################################################################################")
 
 const gruposComVencedores = gruposOrdenados.map(grupo => {
     return _.slice(grupo, 0, 2)
 })
-
-console.log("Grupo so com vencedores: ", gruposComVencedores)
 
 const timesPlayOffs = [];
 
@@ -89,23 +74,17 @@ gruposComVencedores.map(grupo => {
     })
 }) 
 
-console.log("########################")
-console.log("Times dos Playoofs")
-console.log("########################")
-
-console.log(timesPlayOffs)
+console.log("################################################################################################")
+console.log("Vamos dar inicio as playofs com os seguintes times: ", timesPlayOffs)
+console.log("################################################################################################")
 
 const timesEmbaralhados = _.shuffle(timesPlayOffs)
 
-console.log("Times embaralhados: ", timesEmbaralhados)
-
 let playoffs = _.chunk(timesEmbaralhados, 2)
-
-console.log("Faze playoofs: ", playoffs)
 
 playoffs.map(partida => {
     resultadoPartida = jogarPartida(partida[0], partida[1])
-    console.log("Resultado partida: ", resultadoPartida);
+    console.log("Resultado partida ----->", resultadoPartida);
     if(resultadoPartida.team01_rounds > resultadoPartida.team02_rounds) {
         partida[0].pontos++
         partida[0].rounds += resultadoPartida.team01_rounds
@@ -117,31 +96,20 @@ playoffs.map(partida => {
     }  
 })
 
-console.log("Proxima fase", playoffs)
-
-playoffs = playoffs.map(partida => {
-    return _.orderBy(partida, ['pontos', 'rounds'], ['desc', 'desc'])
-}).map(partida => {
-    return _.slice(partida, 0, 1)
-})
+playoffs = orderPorVencedores(playoffs)
 
 finais = [];
 
-console.log("Isso aqui: ", playoffs)
-
 playoffs.map(time => {
-    console.log("O time: ", time)
     finais.push(time[0])
 } );
 
-console.log("O que vai ser isso", playoffs)
-console.log("Final: ", finais)
+console.log("################################################################################################")
+console.log("Vamos dar inicio as finais com os seguintes times: ", finais)
+console.log("################################################################################################")
 
-//Quando for 2 times, e diferente
-
-    console.log("Partida: ", finais)
     resultadoPartida = jogarPartida(finais[0], finais[1])
-    console.log("Resultado partida: ", resultadoPartida);
+    console.log("Resultado partida ----->", resultadoPartida);
     if(resultadoPartida.team01_rounds > resultadoPartida.team02_rounds) {
         finais[0].pontos++
         finais[0].rounds += resultadoPartida.team01_rounds
@@ -152,33 +120,17 @@ console.log("Final: ", finais)
         finais[0].derrotas++
     }  
 
-console.log("Proxima fase", finais)
+finais = orderPorVencedores(playoffs)
 
-finais = playoffs.map(partida => {
-    return _.orderBy(partida, ['pontos', 'rounds'], ['desc', 'desc'])
-}).map(partida => {
-    return _.slice(partida, 0, 1)
-})
+console.log("################################################################################################")
+console.log("Time Vencedor: ", finais[0])
+console.log("################################################################################################")
 
-console.log("FInal: ", finais)
-
-console.log("Isso aqui: ", playoffs)
-
-vencedor = {}
-
-finais.map(time => {
-    vencedor = time[0];
-} );
-
-console.log("O grande vencedor e: ", vencedor)
-
+//TODO: Melhorar geracao de partidas com logicas para cada round, com possibilidade de prorrogacoes
 function jogarPartida(team01, team02) {
-
     let team01_rounds = _.random(0, 16);
     let team02_rounds = _.random(0, 16);
-
     team01_rounds > team02_rounds ? team01_rounds = 16 : team02_rounds = 16
-
     return {team01: team01.id, team02: team02.id, team01_rounds, team02_rounds }
 }
 
@@ -188,15 +140,10 @@ function jogouContra(time, adversario) {
     return podeJogar == undefined && podeJogar2 == undefined;
 }
 
-// Array com 80 times
-// Dividir em grupos de 5 times
-// Cada time joga 1x contra cada time do seu grupo
-// Cada vitoria soma 1 ponto na tabela
-// os 2 times de cada grupo avançam para as playoofs
-// desampata com numeor de vitoria e saldo de rounds
-// apresentar os grupos da splayoofs
-
-// Playoffs:
-// Duplas formadas aleatoriamente
-// Perdedores serão eliminados
-// Ate a final
+function orderPorVencedores(partidas) {
+    return partidas.map(partida => {
+        return _.orderBy(partida, ['pontos', 'rounds'], ['desc', 'desc']);
+    }).map(partida => {
+        return _.slice(partida, 0, 1)
+    })
+}
